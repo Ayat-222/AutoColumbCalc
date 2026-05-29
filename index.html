@@ -3,509 +3,511 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Калькулятор растаможки — Казахстан</title>
+  <title>Калькулятор растаможки — AutoColumb</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg: #0f0f0f;
-      --bg2: #1a1a1a;
-      --bg3: #242424;
-      --text: #ffffff;
-      --text2: rgba(255,255,255,0.55);
-      --text3: rgba(255,255,255,0.3);
-      --accent: #2ecc71;
-      --red: #e74c3c;
-      --border: rgba(255,255,255,0.1);
-      --border2: rgba(255,255,255,0.18);
-      --radius: 12px;
-      --radius-sm: 8px;
+      --bg: #0f0f0f; --bg2: #1a1a1a; --bg3: #242424; --bg4: #2e2e2e;
+      --text: #ffffff; --text2: rgba(255,255,255,0.55); --text3: rgba(255,255,255,0.28);
+      --accent: #2ecc71; --red: #e74c3c; --orange: #e67e22; --blue: #3498db;
+      --border: rgba(255,255,255,0.09); --border2: rgba(255,255,255,0.18);
+      --radius: 12px; --radius-sm: 8px;
     }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      padding: 16px 16px 40px;
-      font-size: 15px;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 20px;
-      padding-bottom: 16px;
-      border-bottom: 0.5px solid var(--border);
-    }
-
-    .header-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
-      background: var(--bg3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-    }
-
-    .header-text h1 {
-      font-size: 17px;
-      font-weight: 600;
-      line-height: 1.2;
-    }
-
-    .header-text p {
-      font-size: 12px;
-      color: var(--text2);
-      margin-top: 2px;
-    }
-
-    .section-label {
-      font-size: 11px;
-      color: var(--text3);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      font-weight: 600;
-      margin-bottom: 8px;
-      margin-top: 20px;
-    }
-
-    .toggle-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-bottom: 4px;
-    }
-
-    .toggle-btn {
-      padding: 12px 8px;
-      border: 0.5px solid var(--border);
-      border-radius: var(--radius-sm);
-      background: var(--bg2);
-      color: var(--text2);
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.15s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      font-family: inherit;
-    }
-
-    .toggle-btn.active {
-      background: var(--bg3);
-      color: var(--text);
-      border-color: var(--border2);
-    }
-
-    .toggle-btn.active.ev { border-color: rgba(46,204,113,0.4); color: var(--accent); }
-    .toggle-btn.active.ice { border-color: rgba(231,76,60,0.4); color: var(--red); }
-
-    .input-group {
-      margin-bottom: 10px;
-    }
-
-    .input-group label {
-      display: block;
-      font-size: 13px;
-      color: var(--text2);
-      margin-bottom: 6px;
-    }
-
-    .input-group input,
-    .input-group select {
-      width: 100%;
-      padding: 12px 14px;
-      background: var(--bg2);
-      border: 0.5px solid var(--border);
-      border-radius: var(--radius-sm);
-      color: var(--text);
-      font-size: 15px;
-      font-family: inherit;
-      outline: none;
-      transition: border-color 0.15s;
-      -webkit-appearance: none;
-    }
-
-    .input-group input:focus,
-    .input-group select:focus {
-      border-color: var(--border2);
-    }
-
-    .input-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 16px 16px 52px; font-size: 15px; -webkit-tap-highlight-color: transparent; }
+    .header { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 0.5px solid var(--border); }
+    .header-icon { width: 42px; height: 42px; border-radius: 10px; background: var(--bg3); display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+    .header-text h1 { font-size: 17px; font-weight: 700; }
+    .header-text p { font-size: 12px; color: var(--text2); margin-top: 2px; }
+    .section-label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; margin-bottom: 8px; margin-top: 20px; }
+    .toggle-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .toggle-btn { padding: 11px 8px; border: 0.5px solid var(--border); border-radius: var(--radius-sm); background: var(--bg2); color: var(--text2); font-size: 14px; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; font-family: inherit; transition: all 0.15s; }
+    .toggle-btn.active-ice { background: var(--bg3); color: var(--red); border-color: rgba(231,76,60,0.35); }
+    .toggle-btn.active-ev { background: var(--bg3); color: var(--accent); border-color: rgba(46,204,113,0.35); }
+    .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .input-grid .full { grid-column: 1 / -1; }
-
-    .calc-btn {
-      width: 100%;
-      padding: 15px;
-      background: var(--accent);
-      border: none;
-      border-radius: var(--radius);
-      color: #000;
-      font-size: 16px;
-      font-weight: 600;
-      font-family: inherit;
-      cursor: pointer;
-      margin-top: 20px;
-      transition: opacity 0.15s, transform 0.1s;
-      letter-spacing: -0.01em;
-    }
-
-    .calc-btn:active { transform: scale(0.98); opacity: 0.9; }
-
-    .result-block {
-      margin-top: 20px;
-      display: none;
-    }
-
+    .input-group { display: flex; flex-direction: column; gap: 5px; }
+    .input-group label { font-size: 13px; color: var(--text2); }
+    .input-group input, .input-group select { width: 100%; padding: 12px 13px; background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius-sm); color: var(--text); font-size: 15px; font-family: inherit; outline: none; -webkit-appearance: none; transition: border-color 0.15s; }
+    .input-group input:focus, .input-group select:focus { border-color: var(--border2); }
+    .input-group select option { background: #1a1a1a; }
+    .hint { font-size: 11px; color: var(--text3); line-height: 1.5; }
+    .kgd-box { background: rgba(52,152,219,0.08); border: 0.5px solid rgba(52,152,219,0.25); border-radius: var(--radius-sm); padding: 12px 13px; margin-top: 10px; }
+    .kgd-box-title { font-size: 12px; color: var(--blue); font-weight: 600; margin-bottom: 8px; }
+    .kgd-calc-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 0.5px solid rgba(255,255,255,0.06); }
+    .kgd-calc-row:last-child { border-bottom: none; padding-top: 7px; }
+    .kgd-label { font-size: 13px; color: var(--text2); }
+    .kgd-val { font-size: 13px; font-weight: 600; color: var(--blue); }
+    .kgd-val.final { font-size: 15px; color: var(--orange); }
+    .calc-btn { width: 100%; padding: 15px; background: var(--accent); border: none; border-radius: var(--radius); color: #000; font-size: 16px; font-weight: 700; font-family: inherit; cursor: pointer; margin-top: 20px; transition: opacity 0.15s, transform 0.1s; }
+    .calc-btn:active { transform: scale(0.98); opacity: 0.88; }
+    .result-block { margin-top: 20px; display: none; }
     .result-block.show { display: block; }
-
-    .ev-badge {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(46,204,113,0.1);
-      border: 0.5px solid rgba(46,204,113,0.3);
-      border-radius: var(--radius-sm);
-      padding: 10px 14px;
-      font-size: 13px;
-      color: var(--accent);
-      margin-bottom: 12px;
-    }
-
-    .result-card {
-      background: var(--bg2);
-      border-radius: var(--radius);
-      border: 0.5px solid var(--border);
-      overflow: hidden;
-    }
-
-    .result-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 13px 16px;
-      border-bottom: 0.5px solid var(--border);
-    }
-
+    .result-card { background: var(--bg2); border-radius: var(--radius); border: 0.5px solid var(--border); overflow: hidden; }
+    .section-divider { padding: 8px 15px; background: var(--bg3); font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.07em; font-weight: 600; border-bottom: 0.5px solid var(--border); }
+    .result-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; border-bottom: 0.5px solid var(--border); }
     .result-row:last-child { border-bottom: none; }
-
-    .result-label {
-      font-size: 14px;
-      color: var(--text2);
-    }
-
-    .result-val {
-      font-size: 14px;
-      font-weight: 500;
-    }
-
-    .result-val.zero { color: var(--accent); }
-    .result-val.paid { color: var(--red); }
-
-    .total-card {
-      background: var(--bg3);
-      border-radius: var(--radius);
-      border: 0.5px solid var(--border2);
-      padding: 16px;
-      margin-top: 10px;
-    }
-
-    .total-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-    }
-
-    .total-label {
-      font-size: 14px;
-      color: var(--text2);
-    }
-
-    .total-val {
-      font-size: 26px;
-      font-weight: 700;
-      letter-spacing: -0.03em;
-    }
-
-    .total-kzt {
-      font-size: 13px;
-      color: var(--text3);
-      text-align: right;
-      margin-top: 4px;
-    }
-
-    .saving-card {
-      background: rgba(46,204,113,0.08);
-      border: 0.5px solid rgba(46,204,113,0.25);
-      border-radius: var(--radius-sm);
-      padding: 12px 16px;
-      margin-top: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .saving-label { font-size: 13px; color: var(--accent); }
-    .saving-val { font-size: 16px; font-weight: 600; color: var(--accent); }
-
-    .disclaimer {
-      font-size: 11px;
-      color: var(--text3);
-      line-height: 1.5;
-      margin-top: 12px;
-      padding: 0 4px;
-    }
-
+    .result-label { font-size: 13px; color: var(--text2); flex: 1; padding-right: 8px; line-height: 1.4; }
+    .result-val { font-size: 14px; font-weight: 600; white-space: nowrap; }
+    .zero { color: var(--accent); }
+    .paid { color: var(--red); }
+    .neutral { color: var(--text); }
+    .base-price { color: var(--orange); }
+    .total-card { background: var(--bg3); border-radius: var(--radius); border: 0.5px solid var(--border2); padding: 16px 15px; margin-top: 10px; }
+    .total-row { display: flex; justify-content: space-between; align-items: baseline; }
+    .total-label { font-size: 14px; color: var(--text2); }
+    .total-val { font-size: 28px; font-weight: 700; letter-spacing: -0.03em; }
+    .total-kzt { font-size: 13px; color: var(--text3); text-align: right; margin-top: 4px; }
+    .disclaimer { font-size: 11px; color: var(--text3); line-height: 1.6; margin-top: 12px; }
     .hidden { display: none !important; }
+    @media print {
+      body { background: #fff !important; color: #000 !important; padding: 0 !important; font-size: 12px !important; }
+      .header, .toggle-row, .section-label, .input-grid, .input-group, .kgd-box, .divider, .calc-btn, .pdf-btn, .disclaimer { display: none !important; }
+      .result-block { display: block !important; margin: 0 !important; }
+      .result-card { background: #fff !important; border: 1px solid #ddd !important; border-radius: 0 !important; }
+      .section-divider { background: #f0f0f0 !important; color: #333 !important; padding: 6px 12px !important; font-size: 10px !important; }
+      .result-row { padding: 7px 12px !important; border-bottom: 0.5px solid #eee !important; }
+      .result-label { color: #555 !important; font-size: 12px !important; }
+      .result-val { color: #000 !important; font-size: 12px !important; }
+      .result-val.paid { color: #c0392b !important; }
+      .result-val.zero { color: #27ae60 !important; }
+      .result-val.base-price { color: #e67e22 !important; }
+      .total-card { background: #1a1a1a !important; color: #fff !important; border-radius: 6px !important; padding: 12px !important; margin-top: 8px !important; }
+      .total-label { color: #aaa !important; font-size: 12px !important; }
+      .total-val { color: #fff !important; font-size: 22px !important; }
+      .total-kzt { color: #aaa !important; font-size: 11px !important; }
+      .print-header { display: block !important; }
+      .client-block { display: none !important; }
+      .print-client { display: block !important; }
+      .saving-card { display: none !important; }
+    }
+    .print-client { display: none; margin-bottom: 12px; padding: 10px 12px; background: #f8f8f8; border-radius: 6px; border-left: 3px solid #111; }
+    .print-client-name { font-size: 14px; font-weight: 700; color: #000; }
+    .print-client-car { font-size: 12px; color: #555; margin-top: 2px; }
+    .print-header { display: none; padding: 0 0 12px; border-bottom: 2px solid #111; margin-bottom: 16px; }
+    .print-header h2 { font-size: 20px; font-weight: 700; color: #000; }
+    .print-header p { font-size: 11px; color: #888; margin-top: 3px; }
+    .print-footer { display: none; margin-top: 16px; padding-top: 10px; border-top: 1px solid #ddd; font-size: 10px; color: #aaa; }
+    .client-block { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius-sm); padding: 12px 13px; margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
+    .client-row { display: flex; align-items: center; gap: 10px; }
+    .client-icon { font-size: 16px; flex-shrink: 0; width: 22px; text-align: center; }
+    .client-input { flex: 1; background: transparent; border: none; color: var(--text); font-size: 14px; font-family: inherit; outline: none; padding: 0; }
+    .client-input::placeholder { color: var(--text3); }
+    .client-divider { height: 0.5px; background: var(--border); }
+    .pdf-btn { width: 100%; padding: 14px; background: transparent; border: 0.5px solid var(--border2); border-radius: var(--radius); color: var(--text2); font-size: 15px; font-weight: 600; font-family: inherit; cursor: pointer; margin-top: 10px; transition: all 0.15s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .pdf-btn:hover { background: var(--bg2); color: var(--text); }
+    .pdf-btn:active { transform: scale(0.98); }
+    .route-port-name { font-size: 13px; color: var(--text2); }
+    .route-port-val { font-size: 13px; font-weight: 600; }
+    .divider { height: 0.5px; background: var(--border); margin: 20px 0; }
   </style>
 </head>
 <body>
 
-  <div class="header">
-    <div class="header-icon">🚗</div>
-    <div class="header-text">
-      <h1>Калькулятор растаможки</h1>
-      <p>Казахстан · Привоз из США</p>
-    </div>
+<div class="header">
+  <div class="header-icon">🚗</div>
+  <div class="header-text">
+    <h1>Калькулятор растаможки</h1>
+    <p>AutoColumb · Казахстан 🇰🇿</p>
+  </div>
+</div>
+
+<div class="client-block">
+  <div class="client-row">
+    <span class="client-icon">👤</span>
+    <input class="client-input" id="client-name" type="text" placeholder="Имя клиента — например Досмаил" autocomplete="off">
+  </div>
+  <div class="client-divider"></div>
+  <div class="client-row">
+    <span class="client-icon">🚗</span>
+    <input class="client-input" id="client-car" type="text" placeholder="Марка и модель — например BMW X5" autocomplete="off">
+  </div>
+</div>
+
+<div class="section-label">Тип автомобиля</div>
+<div class="toggle-row">
+  <button class="toggle-btn active-ice" id="btn-ice" onclick="setType('ice')">⛽ Бензин / Дизель</button>
+  <button class="toggle-btn" id="btn-ev" onclick="setType('ev')">⚡ Электромобиль</button>
+</div>
+
+<div class="section-label">Стоимость автомобиля</div>
+<div class="input-grid">
+  <div class="input-group full">
+    <label>Цена покупки (USD) — аукцион или дилер</label>
+    <input type="number" id="price" placeholder="например 36000" min="0" step="100" inputmode="decimal" oninput="updateAuctionTax()">
+  </div>
+  <div class="input-group full">
+    <label>Налог площадки США (10% от цены)</label>
+    <input type="number" id="auction-tax" placeholder="рассчитывается автоматически" min="0" step="1" inputmode="decimal" style="color: var(--orange);">
+    <span class="hint">Рассчитывается автоматически · можно изменить вручную</span>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="section-label">Цена КГД — база для расчёта пошлины</div>
+<div class="input-grid">
+  <div class="input-group full">
+    <label>Цена КГД из таблицы (USD)</label>
+    <input type="number" id="kgd-price" placeholder="например 41848" min="0" step="1" inputmode="decimal">
+    <span class="hint">Укажите цену из таблицы КГД для последнего известного года</span>
+  </div>
+  <div class="input-group">
+    <label>Год в таблице КГД</label>
+    <input type="number" id="kgd-year" placeholder="2024" min="2010" max="2026" inputmode="numeric">
+  </div>
+  <div class="input-group">
+    <label>Год выпуска авто</label>
+    <input type="number" id="car-year" placeholder="2022" min="2000" max="2026" inputmode="numeric">
+    <span class="hint">Фактический год авто</span>
+  </div>
+</div>
+
+<div id="kgd-preview" class="kgd-box hidden">
+  <div class="kgd-box-title">📊 Расчёт базовой цены КГД</div>
+  <div id="kgd-steps"></div>
+</div>
+
+<div class="divider"></div>
+
+<div class="section-label">Параметры двигателя и расходы</div>
+<div class="input-grid">
+  <div class="input-group" id="group-engine">
+    <label>Объём двигателя (см³)</label>
+    <input type="number" id="engine" placeholder="например 3000" min="500" max="9000" step="100" inputmode="numeric">
+    <span class="hint">1.5л = 1500, 3.5л = 3500</span>
+  </div>
+  <div class="input-group">
+    <label>Курс USD / KZT</label>
+    <input type="number" id="rate" value="486" min="100" step="1" inputmode="numeric">
+  </div>
+  <div class="input-group full">
+    <label>Доставка по США до порта (USD)</label>
+    <input type="number" id="usa-delivery" placeholder="например 500" min="0" step="1" inputmode="decimal">
+    <span class="hint">1 миля = $1 · уточняйте по Google Maps</span>
+  </div>
+  <div class="input-group full">
+    <label>Комиссия AutoColumb (USD)</label>
+    <input type="number" id="commission" placeholder="например 3000" min="0" step="100" inputmode="decimal">
+  </div>
+  <div class="input-group full">
+    <label>Прочая логистика (USD)</label>
+    <input type="number" id="delivery" placeholder="контейнер, автовоз, брокер" min="0" step="100" inputmode="decimal">
+  </div>
+</div>
+
+<button class="calc-btn" onclick="calculate()">Рассчитать →</button>
+
+<div class="result-block" id="result-block">
+
+  <div class="print-client" id="print-client">
+    <div class="print-client-name" id="print-client-name"></div>
+    <div class="print-client-car" id="print-client-car"></div>
   </div>
 
-  <div class="section-label">Тип автомобиля</div>
-  <div class="toggle-row">
-    <button class="toggle-btn ice active" id="btn-ice" onclick="setType('ice')">
-      ⛽ Бензин / Дизель
-    </button>
-    <button class="toggle-btn ev" id="btn-ev" onclick="setType('ev')">
-      ⚡ Электромобиль
-    </button>
+  <div class="print-header">
+    <h2>AutoColumb — Расчёт растаможки</h2>
+    <p id="print-date"></p>
   </div>
 
-  <div class="section-label">Параметры</div>
-  <div class="input-grid">
-    <div class="input-group full">
-      <label>Стоимость авто (USD)</label>
-      <input type="number" id="price" placeholder="например 45000" min="0" step="500" inputmode="numeric">
+  <div class="result-card">
+
+    <div class="section-divider">База расчёта пошлины (цена КГД)</div>
+    <div class="result-row">
+      <span class="result-label">Цена КГД из таблицы</span>
+      <span class="result-val neutral" id="r-kgd-table">—</span>
     </div>
-    <div class="input-group" id="group-year">
-      <label>Год выпуска</label>
-      <input type="number" id="year" placeholder="2021" min="1990" max="2026" inputmode="numeric">
+    <div class="result-row" id="row-kgd-adj" class="hidden">
+      <span class="result-label" id="r-kgd-adj-label">Скидка за год(а)</span>
+      <span class="result-val base-price" id="r-kgd-adj">—</span>
     </div>
-    <div class="input-group" id="group-engine">
-      <label>Объём (см³)</label>
-      <input type="number" id="engine" placeholder="2000" min="600" max="7000" step="100" inputmode="numeric">
+    <div class="result-row">
+      <span class="result-label">База для пошлины и НДС</span>
+      <span class="result-val base-price" id="r-kgd-base">—</span>
     </div>
-    <div class="input-group">
-      <label>Доставка (USD)</label>
-      <input type="number" id="delivery" value="4000" min="0" step="100" inputmode="numeric">
+
+    <div class="section-divider">Стоимость авто и доставка</div>
+    <div class="result-row">
+      <span class="result-label">Цена покупки</span>
+      <span class="result-val neutral" id="r-price">—</span>
     </div>
-    <div class="input-group">
-      <label>Курс USD/KZT</label>
-      <input type="number" id="rate" value="480" min="100" step="1" inputmode="numeric">
+    <div class="result-row">
+      <span class="result-label">Налог площадки США (10%)</span>
+      <span class="result-val paid" id="r-auction-tax">—</span>
     </div>
+    <div class="result-row">
+      <span class="result-label">Доставка по США до порта</span>
+      <span class="result-val neutral" id="r-usa-delivery">—</span>
+    </div>
+    <div class="result-row">
+      <span class="result-label">Комиссия AutoColumb</span>
+      <span class="result-val neutral" id="r-commission">—</span>
+    </div>
+    <div class="result-row">
+      <span class="result-label">Прочая логистика</span>
+      <span class="result-val neutral" id="r-delivery">—</span>
+    </div>
+
+    <div class="section-divider">Государственные платежи (от цены КГД)</div>
+    <div class="result-row">
+      <span class="result-label">Таможенная пошлина (15%)</span>
+      <span class="result-val paid" id="r-duty">—</span>
+    </div>
+    <div class="result-row">
+      <span class="result-label">НДС (16%)</span>
+      <span class="result-val paid" id="r-vat">—</span>
+    </div>
+    <div class="result-row" id="row-util">
+      <span class="result-label">Утилизационный сбор</span>
+      <span class="result-val" id="r-util">—</span>
+    </div>
+    <div class="result-row" id="row-excise">
+      <span class="result-label">Акциз на объём (100 ₸/см³, >3000)</span>
+      <span class="result-val" id="r-excise">—</span>
+    </div>
+    <div class="result-row">
+      <span class="result-label">Первичная регистрация</span>
+      <span class="result-val" id="r-reg">—</span>
+    </div>
+
+    <div class="section-divider">Прочие расходы в КЗ</div>
+    <div class="result-row">
+      <span class="result-label">Расходы в КЗ (касса, учёт)</span>
+      <span class="result-val neutral">$864</span>
+    </div>
+
   </div>
 
-  <button class="calc-btn" onclick="calculate()">Рассчитать →</button>
-
-  <div class="result-block" id="result-block">
-
-    <div class="ev-badge hidden" id="ev-badge">
-      ✅ Электромобиль — льготный режим в Казахстане
+  <div class="total-card">
+    <div class="total-row">
+      <span class="total-label">Цена под ключ</span>
+      <span class="total-val" id="r-total">—</span>
     </div>
-
-    <div class="result-card">
-      <div class="result-row">
-        <span class="result-label">Стоимость авто</span>
-        <span class="result-val" id="r-price">—</span>
-      </div>
-      <div class="result-row">
-        <span class="result-label">Доставка и оформление</span>
-        <span class="result-val" id="r-delivery">—</span>
-      </div>
-      <div class="result-row">
-        <span class="result-label">Таможенная пошлина</span>
-        <span class="result-val" id="r-duty">—</span>
-      </div>
-      <div class="result-row">
-        <span class="result-label">Утилизационный сбор</span>
-        <span class="result-val" id="r-util">—</span>
-      </div>
-      <div class="result-row">
-        <span class="result-label">НДС при ввозе</span>
-        <span class="result-val" id="r-vat">—</span>
-      </div>
-      <div class="result-row">
-        <span class="result-label">Транспортный налог / год</span>
-        <span class="result-val" id="r-tax">—</span>
-      </div>
-    </div>
-
-    <div class="total-card">
-      <div class="total-row">
-        <span class="total-label">Итого под ключ</span>
-        <span class="total-val" id="r-total">—</span>
-      </div>
-      <div class="total-kzt" id="r-total-kzt"></div>
-    </div>
-
-    <div class="saving-card hidden" id="saving-card">
-      <span class="saving-label">💚 Экономия на льготах (3 года)</span>
-      <span class="saving-val" id="r-saving">—</span>
-    </div>
-
-    <p class="disclaimer">
-      Расчёт приблизительный по ставкам ЕАЭС для физических лиц (1 авто в год, личное использование). Точные цифры уточняйте у таможенного брокера.
-    </p>
+    <div class="total-kzt" id="r-total-kzt"></div>
   </div>
 
-  <script>
-    const tg = window.Telegram?.WebApp;
-    if (tg) {
-      tg.ready();
-      tg.expand();
+  <div class="print-footer" id="print-footer">
+    AutoColumb · Астана, Достык 5/2, ВП-2 · @autocolumb<br>
+    Расчёт является предварительным. Точные суммы уточняйте у специалиста AutoColumb.
+  </div>
+
+  <button class="pdf-btn" onclick="exportPDF()">📄 Скачать расчёт в PDF</button>
+
+  <p class="disclaimer">
+    Пошлина и НДС рассчитываются от базовой цены КГД. Если год авто старше последнего года в таблице КГД — цена уменьшается на 15% за каждый год разницы.<br><br>
+    📍 Астана, Достык 5/2, ВП-2 · @autocolumb
+  </p>
+</div>
+
+<script>
+  const tg = window.Telegram?.WebApp;
+  if (tg) { tg.ready(); tg.expand(); }
+
+  let carType = 'ice';
+
+  function updateAuctionTax() {
+    const price = parseFloat(document.getElementById('price').value) || 0;
+    const taxField = document.getElementById('auction-tax');
+    if (price > 0) {
+      taxField.value = Math.round(price * 0.10);
+      taxField.style.color = 'var(--orange)';
+    } else {
+      taxField.value = '';
+    }
+  }
+
+  function setType(t) {
+    carType = t;
+    document.getElementById('btn-ice').className = 'toggle-btn' + (t === 'ice' ? ' active-ice' : '');
+    document.getElementById('btn-ev').className  = 'toggle-btn' + (t === 'ev'  ? ' active-ev'  : '');
+    document.getElementById('group-engine').classList.toggle('hidden', t === 'ev');
+    document.getElementById('result-block').classList.remove('show');
+  }
+
+  function getUtil(cc) {
+    if (cc <= 2000) return 1556;
+    if (cc <= 3000) return 2223;
+    return 5114;
+  }
+
+  function getExciseTenge(cc) {
+    return cc > 3000 ? cc * 100 : 0;
+  }
+
+  function getRegFee(carYear) {
+    if (carYear >= 2025) return 2;
+    if (carYear === 2024) return 445;
+    return 4447;
+  }
+
+  function fmt(n) {
+    return '$' + Math.round(n).toLocaleString('ru-RU');
+  }
+
+  function fmtKzt(n) {
+    return Math.round(n).toLocaleString('ru-RU') + ' ₸';
+  }
+
+  // Показываем превью КГД при изменении полей
+  ['kgd-price','kgd-year','car-year'].forEach(id => {
+    document.getElementById(id).addEventListener('input', previewKGD);
+  });
+
+  function previewKGD() {
+    const kgdPrice = parseFloat(document.getElementById('kgd-price').value);
+    const kgdYear  = parseInt(document.getElementById('kgd-year').value);
+    const carYear  = parseInt(document.getElementById('car-year').value);
+    const box      = document.getElementById('kgd-preview');
+    const steps    = document.getElementById('kgd-steps');
+
+    if (!kgdPrice || !kgdYear || !carYear || carYear > kgdYear) {
+      box.classList.add('hidden');
+      return;
     }
 
-    let carType = 'ice';
+    const diff = kgdYear - carYear;
+    let html = '';
+    let current = kgdPrice;
 
-    function setType(t) {
-      carType = t;
-      document.getElementById('btn-ev').classList.toggle('active', t === 'ev');
-      document.getElementById('btn-ice').classList.toggle('active', t === 'ice');
-      document.getElementById('group-engine').classList.toggle('hidden', t === 'ev');
-      document.getElementById('group-year').classList.toggle('hidden', t === 'ev');
-      document.getElementById('result-block').classList.remove('show');
+    html += `<div class="kgd-calc-row"><span class="kgd-label">Цена ${kgdYear} года (таблица КГД)</span><span class="kgd-val">${fmt(current)}</span></div>`;
+
+    for (let i = 0; i < diff; i++) {
+      const prev = current;
+      current = current * 0.85;
+      html += `<div class="kgd-calc-row"><span class="kgd-label">${kgdYear - i} → ${kgdYear - i - 1} год (−15%)</span><span class="kgd-val">${fmt(prev)} − 15% = ${fmt(current)}</span></div>`;
     }
 
-    function fmt(n) {
-      return '$' + Math.round(n).toLocaleString('ru-RU');
+    html += `<div class="kgd-calc-row"><span class="kgd-label" style="color:var(--orange); font-weight:600;">База для пошлины (${carYear} год)</span><span class="kgd-val final">${fmt(current)}</span></div>`;
+
+    steps.innerHTML = html;
+    box.classList.remove('hidden');
+  }
+
+  function calculate() {
+    const price      = parseFloat(document.getElementById('price').value) || 0;
+    const usaDelivery = parseFloat(document.getElementById('usa-delivery').value) || 0;
+    const commission  = parseFloat(document.getElementById('commission').value) || 0;
+    const auctionTax = parseFloat(document.getElementById('auction-tax').value) || Math.round(price * 0.10);
+    const kgdPrice = parseFloat(document.getElementById('kgd-price').value) || 0;
+    const kgdYear  = parseInt(document.getElementById('kgd-year').value) || 0;
+    const carYear  = parseInt(document.getElementById('car-year').value) || 0;
+    const engine   = parseInt(document.getElementById('engine').value) || 0;
+    const delivery = parseFloat(document.getElementById('delivery').value) || 0;
+    const rate     = parseFloat(document.getElementById('rate').value) || 486;
+
+    if (!kgdPrice || kgdPrice < 100) { alert('Введите цену КГД из таблицы'); return; }
+    if (!kgdYear || !carYear)         { alert('Введите год из таблицы КГД и год выпуска авто'); return; }
+    if (carType === 'ice' && (!engine || engine < 500)) { alert('Введите объём двигателя в см³'); return; }
+
+    // Считаем базовую цену КГД
+    const diff = Math.max(0, kgdYear - carYear);
+    let kgdBase = kgdPrice;
+    for (let i = 0; i < diff; i++) { kgdBase *= 0.85; }
+
+    // Гос. платежи считаем от базы КГД
+    const duty = kgdBase * 0.15;
+    const vat  = kgdBase * 0.16;
+
+    let util        = 0;
+    let exciseTenge = 0;
+    if (carType === 'ice') {
+      util        = getUtil(engine);
+      exciseTenge = getExciseTenge(engine);
     }
 
-    function fmtKzt(n) {
-      return Math.round(n).toLocaleString('ru-RU') + ' ₸';
+    const exciseUSD = exciseTenge / rate;
+    const reg       = getRegFee(carYear);
+    const kzFixed   = 864;
+
+    const govTotal = duty + vat + util + exciseUSD + reg + kzFixed;
+    const totalUSD = price + auctionTax + usaDelivery + commission + delivery + govTotal;
+    const totalKZT = totalUSD * rate;
+
+    // Отображаем
+    document.getElementById('r-kgd-table').textContent = fmt(kgdPrice);
+
+    const adjRow = document.getElementById('row-kgd-adj');
+    if (diff > 0) {
+      adjRow.style.display = 'flex';
+      document.getElementById('r-kgd-adj-label').textContent = `−15% × ${diff} год(а) назад`;
+      document.getElementById('r-kgd-adj').textContent = fmt(kgdBase);
+    } else {
+      adjRow.style.display = 'none';
     }
 
-    function getDuty(price, engineCC, ageYears) {
-      const eurUsd = 1.08;
-      let pct = 0, minPerCC = 0;
-      if (ageYears <= 3) {
-        pct = 0.54;
-        if (engineCC <= 1000) minPerCC = 2.5;
-        else if (engineCC <= 1500) minPerCC = 3.5;
-        else if (engineCC <= 1800) minPerCC = 5.0;
-        else if (engineCC <= 2300) minPerCC = 6.5;
-        else if (engineCC <= 3000) minPerCC = 7.5;
-        else minPerCC = 15.0;
-      } else if (ageYears <= 5) {
-        if (engineCC <= 1000) minPerCC = 1.5;
-        else if (engineCC <= 1500) minPerCC = 1.7;
-        else if (engineCC <= 1800) minPerCC = 2.5;
-        else if (engineCC <= 2300) minPerCC = 2.7;
-        else if (engineCC <= 3000) minPerCC = 3.0;
-        else minPerCC = 3.6;
-      } else {
-        if (engineCC <= 1000) minPerCC = 3.0;
-        else if (engineCC <= 1500) minPerCC = 3.2;
-        else if (engineCC <= 1800) minPerCC = 3.5;
-        else if (engineCC <= 2300) minPerCC = 4.8;
-        else if (engineCC <= 3000) minPerCC = 5.0;
-        else minPerCC = 5.7;
-      }
-      const byPct = price * pct;
-      const byMin = minPerCC * engineCC * eurUsd;
-      return Math.max(byPct, byMin);
+    document.getElementById('r-kgd-base').textContent  = fmt(kgdBase);
+    document.getElementById('r-price').textContent       = fmt(price);
+    document.getElementById('r-usa-delivery').textContent = usaDelivery > 0 ? fmt(usaDelivery) : '—';
+    document.getElementById('r-commission').textContent  = commission > 0 ? fmt(commission) : '—';
+    document.getElementById('r-auction-tax').textContent = fmt(auctionTax);
+    document.getElementById('r-delivery').textContent    = fmt(delivery);
+
+    const rDuty = document.getElementById('r-duty');
+    rDuty.textContent = fmt(duty); rDuty.className = 'result-val paid';
+
+    const rVat = document.getElementById('r-vat');
+    rVat.textContent = fmt(vat); rVat.className = 'result-val paid';
+
+    const rUtil = document.getElementById('r-util');
+    if (carType === 'ev') {
+      rUtil.textContent = '0 ₸'; rUtil.className = 'result-val zero';
+    } else {
+      rUtil.textContent = fmt(util); rUtil.className = 'result-val paid';
     }
 
-    function getUtil(engineCC, ageYears, rate) {
-      const base = 37370;
-      let k;
-      if (ageYears <= 3) {
-        if (engineCC <= 1000) k = 4.35;
-        else if (engineCC <= 2000) k = 8.15;
-        else if (engineCC <= 3000) k = 25.15;
-        else k = 50.0;
-      } else {
-        if (engineCC <= 1000) k = 7.12;
-        else if (engineCC <= 2000) k = 15.22;
-        else if (engineCC <= 3000) k = 44.25;
-        else k = 88.0;
-      }
-      return (base * k) / rate;
+    const rExcise = document.getElementById('r-excise');
+    if (carType === 'ev' || exciseTenge === 0) {
+      rExcise.textContent = '—'; rExcise.className = 'result-val zero';
+    } else {
+      rExcise.textContent = exciseTenge.toLocaleString('ru-RU') + ' ₸';
+      rExcise.className = 'result-val paid';
     }
 
-    function calculate() {
-      const price = parseFloat(document.getElementById('price').value) || 0;
-      const delivery = parseFloat(document.getElementById('delivery').value) || 0;
-      const rate = parseFloat(document.getElementById('rate').value) || 480;
-      const yearVal = parseInt(document.getElementById('year').value) || 2022;
-      const ageYears = 2026 - yearVal;
-      const engineCC = parseInt(document.getElementById('engine').value) || 2000;
+    const rReg = document.getElementById('r-reg');
+    rReg.textContent = fmt(reg);
+    rReg.className = 'result-val ' + (reg <= 2 ? 'zero' : 'paid');
 
-      let duty = 0, util = 0, taxYear = 0;
+    document.getElementById('r-total').textContent     = fmt(totalUSD);
+    document.getElementById('r-total-kzt').textContent = '≈ ' + fmtKzt(totalKZT);
 
-      if (carType !== 'ev') {
-        duty = getDuty(price, engineCC, ageYears);
-        util = getUtil(engineCC, ageYears, rate);
-        const hp = Math.round(engineCC / 15);
-        taxYear = (hp * 7 * 2.65) / rate;
-      }
+    document.getElementById('result-block').classList.add('show');
+    document.getElementById('result-block').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 
-      const total = price + delivery + duty + util;
-      const totalKzt = total * rate;
+  function exportPDF() {
+    const now     = new Date();
+    const carYear = document.getElementById('car-year').value || '';
+    const name    = document.getElementById('client-name').value.trim();
+    const car     = document.getElementById('client-car').value.trim();
 
-      const setVal = (id, val, isZero) => {
-        const el = document.getElementById(id);
-        el.textContent = val;
-        el.className = 'result-val' + (isZero ? ' zero' : (val !== '0 ₸' && id !== 'r-price' && id !== 'r-delivery' ? ' paid' : ''));
-      };
+    // Дата и год авто
+    document.getElementById('print-date').textContent =
+      'Дата расчёта: ' + now.toLocaleDateString('ru-RU') + ' ' +
+      now.toLocaleTimeString('ru-RU', {hour:'2-digit', minute:'2-digit'}) +
+      (carYear ? '  ·  Год выпуска: ' + carYear : '');
 
-      document.getElementById('r-price').textContent = fmt(price);
-      document.getElementById('r-price').className = 'result-val';
-      document.getElementById('r-delivery').textContent = fmt(delivery);
-      document.getElementById('r-delivery').className = 'result-val';
-
-      const rDuty = document.getElementById('r-duty');
-      rDuty.textContent = duty === 0 ? '0 ₸' : fmt(duty);
-      rDuty.className = 'result-val' + (duty === 0 ? ' zero' : ' paid');
-
-      const rUtil = document.getElementById('r-util');
-      rUtil.textContent = util === 0 ? '0 ₸' : fmt(util);
-      rUtil.className = 'result-val' + (util === 0 ? ' zero' : ' paid');
-
-      document.getElementById('r-vat').textContent = '0 ₸';
-      document.getElementById('r-vat').className = 'result-val zero';
-
-      const rTax = document.getElementById('r-tax');
-      rTax.textContent = taxYear === 0 ? '0 ₸' : fmt(taxYear);
-      rTax.className = 'result-val' + (taxYear === 0 ? ' zero' : ' paid');
-
-      document.getElementById('r-total').textContent = fmt(total);
-      document.getElementById('r-total-kzt').textContent = '≈ ' + fmtKzt(totalKzt);
-
-      const evBadge = document.getElementById('ev-badge');
-      evBadge.classList.toggle('hidden', carType !== 'ev');
-
-      if (carType === 'ev') {
-        const saving = getDuty(price, 2000, 4) + getUtil(2000, 4, rate) + taxYear * 3;
-        document.getElementById('r-saving').textContent = fmt(saving);
-        document.getElementById('saving-card').classList.remove('hidden');
-      } else {
-        document.getElementById('saving-card').classList.add('hidden');
-      }
-
-      document.getElementById('result-block').classList.add('show');
+    // Клиент и авто
+    const clientBlock = document.getElementById('print-client');
+    if (name || car) {
+      document.getElementById('print-client-name').textContent = name ? '👤 ' + name : '';
+      document.getElementById('print-client-car').textContent  = car  ? '🚗 ' + car  : '';
+      clientBlock.style.display = 'block';
+    } else {
+      clientBlock.style.display = 'none';
     }
-  </script>
 
+    // Показываем футер
+    document.getElementById('print-footer').style.display = 'block';
+
+    // Печатаем
+    window.print();
+
+    // Скрываем обратно
+    setTimeout(() => {
+      document.getElementById('print-footer').style.display = 'none';
+      clientBlock.style.display = 'none';
+    }, 1000);
+  }
+</script>
 </body>
 </html>
