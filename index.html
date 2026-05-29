@@ -384,24 +384,39 @@
     const box      = document.getElementById('kgd-preview');
     const steps    = document.getElementById('kgd-steps');
 
-    if (!kgdPrice || !kgdYear || !carYear || carYear > kgdYear) {
+    if (!kgdPrice || !kgdYear || !carYear) {
       box.classList.add('hidden');
       return;
     }
 
-    const diff = kgdYear - carYear;
-    let html = '';
-    let current = kgdPrice;
+    const diff    = carYear - kgdYear; // положительное = авто новее, отрицательное = авто старше
+    const absDiff = Math.abs(diff);
+    let html      = '';
+    let current   = kgdPrice;
 
     html += `<div class="kgd-calc-row"><span class="kgd-label">Цена ${kgdYear} года (таблица КГД)</span><span class="kgd-val">${fmt(current)}</span></div>`;
 
-    for (let i = 0; i < diff; i++) {
-      const prev = current;
-      current = current * 0.85;
-      html += `<div class="kgd-calc-row"><span class="kgd-label">${kgdYear - i} → ${kgdYear - i - 1} год (−15%)</span><span class="kgd-val">${fmt(prev)} − 15% = ${fmt(current)}</span></div>`;
+    if (diff === 0) {
+      // Год совпадает — корректировка не нужна
+      html += `<div class="kgd-calc-row"><span class="kgd-label" style="color:var(--accent);">Год совпадает — корректировка не нужна</span><span class="kgd-val" style="color:var(--accent);">${fmt(current)}</span></div>`;
+    } else if (diff < 0) {
+      // Авто старше — убавляем 15% за каждый год
+      for (let i = 0; i < absDiff; i++) {
+        const prev = current;
+        current    = current * 0.85;
+        html += `<div class="kgd-calc-row"><span class="kgd-label">${kgdYear - i} → ${kgdYear - i - 1} год (−15%)</span><span class="kgd-val">${fmt(prev)} − 15% = ${fmt(current)}</span></div>`;
+      }
+    } else {
+      // Авто новее — добавляем 15% за каждый год
+      for (let i = 0; i < absDiff; i++) {
+        const prev = current;
+        current    = current * 1.15;
+        html += `<div class="kgd-calc-row"><span class="kgd-label" style="color:#e74c3c;">${kgdYear + i} → ${kgdYear + i + 1} год (+15%)</span><span class="kgd-val" style="color:#e74c3c;">${fmt(prev)} + 15% = ${fmt(current)}</span></div>`;
+      }
     }
 
-    html += `<div class="kgd-calc-row"><span class="kgd-label" style="color:var(--orange); font-weight:600;">База для пошлины (${carYear} год)</span><span class="kgd-val final">${fmt(current)}</span></div>`;
+    const arrow = diff > 0 ? '↑ новее таблицы' : diff < 0 ? '↓ старше таблицы' : '';
+    html += `<div class="kgd-calc-row"><span class="kgd-label" style="color:var(--orange); font-weight:600;">База для пошлины (${carYear} год) ${arrow}</span><span class="kgd-val final">${fmt(current)}</span></div>`;
 
     steps.innerHTML = html;
     box.classList.remove('hidden');
@@ -420,13 +435,21 @@
     const rate     = parseFloat(document.getElementById('rate').value) || 486;
 
     if (!kgdPrice || kgdPrice < 100) { alert('Введите цену КГД из таблицы'); return; }
+    if (carYear > kgdYear + 5) { alert('Проверьте год авто — разница больше 5 лет вперёд от таблицы'); return; }
     if (!kgdYear || !carYear)         { alert('Введите год из таблицы КГД и год выпуска авто'); return; }
     if (carType === 'ice' && (!engine || engine < 500)) { alert('Введите объём двигателя в см³'); return; }
 
     // Считаем базовую цену КГД
-    const diff = Math.max(0, kgdYear - carYear);
-    let kgdBase = kgdPrice;
-    for (let i = 0; i < diff; i++) { kgdBase *= 0.85; }
+    // Авто новее таблицы → +15% за каждый год
+    // Авто старше таблицы → -15% за каждый год
+    const diff    = carYear - kgdYear;
+    const absDiff = Math.abs(diff);
+    let kgdBase   = kgdPrice;
+    if (diff > 0) {
+      for (let i = 0; i < absDiff; i++) { kgdBase *= 1.15; } // новее — добавляем
+    } else {
+      for (let i = 0; i < absDiff; i++) { kgdBase *= 0.85; } // старше — убавляем
+    }
 
     // Гос. платежи считаем от базы КГД
     const duty = kgdBase * 0.15;
@@ -451,9 +474,13 @@
     document.getElementById('r-kgd-table').textContent = fmt(kgdPrice);
 
     const adjRow = document.getElementById('row-kgd-adj');
-    if (diff > 0) {
+    if (diff !== 0) {
       adjRow.style.display = 'flex';
-      document.getElementById('r-kgd-adj-label').textContent = `−15% × ${diff} год(а) назад`;
+      const isNewer = diff > 0;
+      document.getElementById('r-kgd-adj-label').textContent = isNewer
+        ? '+15% × ' + Math.abs(diff) + ' год(а) вперёд'
+        : '−15% × ' + Math.abs(diff) + ' год(а) назад';
+      document.getElementById('r-kgd-adj').style.color = isNewer ? 'var(--red)' : 'var(--orange)';
       document.getElementById('r-kgd-adj').textContent = fmt(kgdBase);
     } else {
       adjRow.style.display = 'none';
