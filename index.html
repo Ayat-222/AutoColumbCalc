@@ -310,7 +310,7 @@
 <!-- Модальное окно с изображением расчёта -->
 <div class="modal-overlay" id="img-modal">
   <img class="modal-img" id="modal-img" src="" alt="Расчёт">
-  <p class="modal-hint">📱 Удержи изображение для сохранения<br>или нажми кнопку ниже</p>
+  <p class="modal-hint" id="modal-hint">📱 Нажми кнопку ниже чтобы сохранить</p>
   <a class="modal-save" id="modal-save" download="AutoColumb_raschet.png">⬇️ Сохранить изображение</a>
   <button class="modal-close" onclick="closeModal()">Закрыть</button>
 </div>
@@ -561,26 +561,54 @@
         windowWidth: target.offsetWidth + 32
       });
 
-      const dataUrl = canvas.toDataURL('image/png');
       const clientStr = name ? name.replace(/[^a-zA-Z0-9]/g, '-') : 'klient';
       const carStr    = car  ? car.replace(/[^a-zA-Z0-9]/g, '-')  : 'avto';
       const fileName  = 'AutoColumb_' + clientStr + '_' + carStr + '_' +
                         now.toLocaleDateString('ru-RU').split('.').join('-') + '.png';
 
-      const imgEl  = document.getElementById('modal-img');
-      const saveEl = document.getElementById('modal-save');
-      imgEl.src       = dataUrl;
-      saveEl.href     = dataUrl;
-      saveEl.download = fileName;
-      document.getElementById('img-modal').classList.add('show');
+      // Конвертируем canvas в Blob
+      canvas.toBlob(async (blob) => {
+        const blobUrl = URL.createObjectURL(blob);
+        const file    = new File([blob], fileName, { type: 'image/png' });
+
+        // Показываем превью
+        const imgEl = document.getElementById('modal-img');
+        imgEl.src   = blobUrl;
+        document.getElementById('img-modal').classList.add('show');
+
+        // Обновляем кнопку сохранения
+        const saveEl = document.getElementById('modal-save');
+
+        // Пробуем Web Share API (работает в Telegram и мобильных браузерах)
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          saveEl.textContent = '📤 Поделиться / Сохранить';
+          saveEl.onclick = async (e) => {
+            e.preventDefault();
+            try {
+              await navigator.share({ files: [file], title: 'Расчёт AutoColumb' });
+            } catch(err) {
+              // Пользователь отменил — не ошибка
+            }
+          };
+        } else {
+          // Fallback: скачать через blob URL
+          saveEl.href     = blobUrl;
+          saveEl.download = fileName;
+          saveEl.textContent = '⬇️ Сохранить изображение';
+          saveEl.onclick  = null;
+        }
+      }, 'image/png');
 
     } catch(e) {
       alert('Ошибка: ' + e.message);
-    } finally {
       btn.textContent = isInTelegram() ? '📷 Скачать как PNG' : '📄 Скачать как PDF';
       btn.disabled = false;
       cleanupExportData(clientBlock);
     }
+    // Restore button after toBlob async completes
+    btn.textContent = isInTelegram() ? '📷 Скачать как PNG' : '📄 Скачать как PDF';
+    btn.disabled = false;
+    cleanupExportData(clientBlock);
   }
 
   async function exportPDF() {
