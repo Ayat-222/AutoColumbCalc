@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Калькулятор растаможки — AutoColumb</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -94,6 +95,12 @@
     .client-input { flex: 1; background: transparent; border: none; color: var(--text); font-size: 14px; font-family: inherit; outline: none; padding: 0; }
     .client-input::placeholder { color: var(--text3); }
     .client-divider { height: 0.5px; background: var(--border); }
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+    .modal-overlay.show { display: flex; }
+    .modal-img { max-width: 100%; max-height: 70vh; border-radius: 8px; object-fit: contain; }
+    .modal-hint { font-size: 13px; color: rgba(255,255,255,0.6); margin-top: 14px; text-align: center; line-height: 1.6; }
+    .modal-close { margin-top: 16px; padding: 12px 32px; background: var(--bg3); border: 0.5px solid var(--border2); border-radius: var(--radius-sm); color: var(--text); font-size: 15px; font-family: inherit; cursor: pointer; }
+    .modal-save { margin-top: 10px; padding: 13px 32px; background: var(--accent); border: none; border-radius: var(--radius-sm); color: #000; font-size: 15px; font-weight: 700; font-family: inherit; cursor: pointer; width: 100%; }
     .pdf-btn { width: 100%; padding: 14px; background: transparent; border: 0.5px solid var(--border2); border-radius: var(--radius); color: var(--text2); font-size: 15px; font-weight: 600; font-family: inherit; cursor: pointer; margin-top: 10px; transition: all 0.15s; display: flex; align-items: center; justify-content: center; gap: 8px; }
     .pdf-btn:hover { background: var(--bg2); color: var(--text); }
     .pdf-btn:active { transform: scale(0.98); }
@@ -151,6 +158,7 @@
     <label>Цена КГД из таблицы (USD)</label>
     <input type="number" id="kgd-price" placeholder="например 41848" min="0" step="1" inputmode="decimal">
     <span class="hint">Укажите цену из таблицы КГД для последнего известного года</span>
+    <a href="https://docs.google.com/spreadsheets/d/1T_986A9wrwwWmdL-sJav73kAPMDipk5W/edit" target="_blank" style="font-size:12px; color:var(--blue); text-decoration:none; display:inline-flex; align-items:center; gap:4px; margin-top:2px;">📊 Открыть таблицу КГД</a>
   </div>
   <div class="input-group">
     <label>Год в таблице КГД</label>
@@ -291,7 +299,7 @@
     Расчёт является предварительным. Точные суммы уточняйте у специалиста AutoColumb.
   </div>
 
-  <button class="pdf-btn" onclick="exportPDF()">📄 Скачать расчёт в PDF</button>
+  <button class="pdf-btn" onclick="exportPDF()">📄 Скачать расчёт</button>
 
   <p class="disclaimer">
     Пошлина и НДС рассчитываются от базовой цены КГД. Если год авто старше последнего года в таблице КГД — цена уменьшается на 15% за каждый год разницы.<br><br>
@@ -299,9 +307,25 @@
   </p>
 </div>
 
+<!-- Модальное окно с изображением расчёта -->
+<div class="modal-overlay" id="img-modal">
+  <img class="modal-img" id="modal-img" src="" alt="Расчёт">
+  <p class="modal-hint">📱 Удержи изображение для сохранения<br>или нажми кнопку ниже</p>
+  <a class="modal-save" id="modal-save" download="AutoColumb_raschet.png">⬇️ Сохранить изображение</a>
+  <button class="modal-close" onclick="closeModal()">Закрыть</button>
+</div>
+
 <script>
   const tg = window.Telegram?.WebApp;
   if (tg) { tg.ready(); tg.expand(); }
+
+  // Обновляем текст кнопки под платформу после загрузки
+  window.addEventListener('load', () => {
+    const btn = document.querySelector('.pdf-btn');
+    if (btn) btn.innerHTML = isInTelegram()
+      ? '📷 Скачать как PNG'
+      : '📄 Скачать как PDF';
+  });
 
   let carType = 'ice';
 
@@ -474,39 +498,97 @@
     document.getElementById('result-block').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
-  function exportPDF() {
+  function closeModal() {
+    document.getElementById('img-modal').classList.remove('show');
+  }
+
+  // Определяем где открыт калькулятор — в Telegram или в браузере
+  function isInTelegram() {
+    return !!(window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initData);
+  }
+
+  function prepareExportData() {
     const now     = new Date();
     const carYear = document.getElementById('car-year').value || '';
     const name    = document.getElementById('client-name').value.trim();
     const car     = document.getElementById('client-car').value.trim();
 
-    // Дата и год авто
     document.getElementById('print-date').textContent =
-      'Дата расчёта: ' + now.toLocaleDateString('ru-RU') + ' ' +
+      'Дата: ' + now.toLocaleDateString('ru-RU') + ' ' +
       now.toLocaleTimeString('ru-RU', {hour:'2-digit', minute:'2-digit'}) +
-      (carYear ? '  ·  Год выпуска: ' + carYear : '');
+      (carYear ? '  ·  Год авто: ' + carYear : '');
 
-    // Клиент и авто
     const clientBlock = document.getElementById('print-client');
     if (name || car) {
       document.getElementById('print-client-name').textContent = name ? '👤 ' + name : '';
       document.getElementById('print-client-car').textContent  = car  ? '🚗 ' + car  : '';
       clientBlock.style.display = 'block';
-    } else {
-      clientBlock.style.display = 'none';
     }
-
-    // Показываем футер
     document.getElementById('print-footer').style.display = 'block';
 
-    // Печатаем
-    window.print();
+    return { now, name, car, clientBlock };
+  }
 
-    // Скрываем обратно
-    setTimeout(() => {
-      document.getElementById('print-footer').style.display = 'none';
-      clientBlock.style.display = 'none';
-    }, 1000);
+  function cleanupExportData(clientBlock) {
+    document.getElementById('print-footer').style.display = 'none';
+    if (clientBlock) clientBlock.style.display = 'none';
+  }
+
+  // ── Веб: печать → PDF
+  function exportWeb() {
+    const { now, name, car, clientBlock } = prepareExportData();
+    window.print();
+    setTimeout(() => cleanupExportData(clientBlock), 1500);
+  }
+
+  // ── Telegram: html2canvas → PNG
+  async function exportTelegram() {
+    const btn = document.querySelector('.pdf-btn');
+    btn.textContent = '⏳ Создаём изображение...';
+    btn.disabled = true;
+
+    const { now, name, car, clientBlock } = prepareExportData();
+    await new Promise(r => setTimeout(r, 120));
+
+    try {
+      const target = document.getElementById('result-block');
+      const canvas = await html2canvas(target, {
+        backgroundColor: '#0f0f0f',
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        width: target.offsetWidth,
+        windowWidth: target.offsetWidth + 32
+      });
+
+      const dataUrl = canvas.toDataURL('image/png');
+      const clientStr = name ? name.replace(/[^a-zA-Z0-9]/g, '-') : 'klient';
+      const carStr    = car  ? car.replace(/[^a-zA-Z0-9]/g, '-')  : 'avto';
+      const fileName  = 'AutoColumb_' + clientStr + '_' + carStr + '_' +
+                        now.toLocaleDateString('ru-RU').split('.').join('-') + '.png';
+
+      const imgEl  = document.getElementById('modal-img');
+      const saveEl = document.getElementById('modal-save');
+      imgEl.src       = dataUrl;
+      saveEl.href     = dataUrl;
+      saveEl.download = fileName;
+      document.getElementById('img-modal').classList.add('show');
+
+    } catch(e) {
+      alert('Ошибка: ' + e.message);
+    } finally {
+      btn.textContent = isInTelegram() ? '📷 Скачать как PNG' : '📄 Скачать как PDF';
+      btn.disabled = false;
+      cleanupExportData(clientBlock);
+    }
+  }
+
+  async function exportPDF() {
+    if (isInTelegram()) {
+      await exportTelegram();
+    } else {
+      exportWeb();
+    }
   }
 </script>
 </body>
